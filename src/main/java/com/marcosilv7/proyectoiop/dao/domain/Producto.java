@@ -19,6 +19,9 @@ public class Producto implements Serializable {
     @Column
     private Integer id;
 
+    @ManyToOne
+    private Proveedor proveedor;
+
     @NotNull
     @Column
     private String codigo;
@@ -31,7 +34,7 @@ public class Producto implements Serializable {
     @NotNull
     @Column
     @Min(0)
-    private BigDecimal c_costo;
+    private BigDecimal costoCompra;
 
     @NotNull
     @Column
@@ -58,6 +61,11 @@ public class Producto implements Serializable {
     @Min(0)
     private Integer inventarioInicial;
 
+    @NotNull
+    @Column
+    @Min(0)
+    private Integer stockMinimoPorPeriodo;
+
     public Integer getId() {
         return id;
     }
@@ -80,14 +88,6 @@ public class Producto implements Serializable {
 
     public void setProductos(String productos) {
         this.productos = productos;
-    }
-
-    public BigDecimal getC_costo() {
-        return c_costo;
-    }
-
-    public void setC_costo(BigDecimal c_costo) {
-        this.c_costo = c_costo;
     }
 
     public BigDecimal getCostoPreparacion() {
@@ -128,5 +128,31 @@ public class Producto implements Serializable {
 
     public void setInventarioInicial(Integer inventarioInicial) {
         this.inventarioInicial = inventarioInicial;
+    }
+
+    public BigDecimal getCostoCompra() {
+        return costoCompra;
+    }
+
+    public void setCostoCompra(BigDecimal costoCompra) {
+        this.costoCompra = costoCompra;
+    }
+
+    public Integer getStockMinimoPorPeriodo() {
+        return stockMinimoPorPeriodo;
+    }
+
+    public void setStockMinimoPorPeriodo(Integer stockMinimoPorPeriodo) {
+        this.stockMinimoPorPeriodo = stockMinimoPorPeriodo;
+    }
+
+    public Proveedor getProveedor() {
+        if(proveedor==null)
+            proveedor=new Proveedor();
+        return proveedor;
+    }
+
+    public void setProveedor(Proveedor proveedor) {
+        this.proveedor = proveedor;
     }
 }

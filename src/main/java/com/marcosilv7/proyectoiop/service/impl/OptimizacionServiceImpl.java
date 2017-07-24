@@ -16,17 +16,25 @@ public class OptimizacionServiceImpl implements OptimizacionService {
     private DemandaRepository demandaRepository;
     private ResultadoCompraRepository resultadoCompraRepository;
     private ResultadoInventarioRepository resultadoInventarioRepository;
+    private ProveedorRepository proveedorRepository;
 
     @Autowired
     public OptimizacionServiceImpl(ProductoRepository productoRepository, PeriodoRepository periodoRepository,
                                    DemandaRepository demandaRepository,
                                    ResultadoCompraRepository resultadoCompraRepository,
-                                   ResultadoInventarioRepository resultadoInventarioRepository) {
+                                   ResultadoInventarioRepository resultadoInventarioRepository,
+                                   ProveedorRepository proveedorRepository) {
         this.productoRepository = productoRepository;
         this.periodoRepository = periodoRepository;
         this.demandaRepository = demandaRepository;
         this.resultadoCompraRepository = resultadoCompraRepository;
         this.resultadoInventarioRepository = resultadoInventarioRepository;
+        this.proveedorRepository=proveedorRepository;
+    }
+
+    @Override
+    public List<Proveedor> obtenerProveedores() {
+        return proveedorRepository.findAll();
     }
 
     @Override

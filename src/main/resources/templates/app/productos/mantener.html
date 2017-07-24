@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="shared/layout">
+<head>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div class="row page-titles">
+        <div class="col-md-6 col-8 align-self-center">
+            <h3 class="text-themecolor m-b-0 m-t-0">Registrar Producto</h3>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Productos</a></li>
+                <li class="breadcrumb-item active">Registrar</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="col-lg-12 col-xlg-12 col-md-12">
+        <div class="card">
+            <div class="card-block">
+                <form class="form"  th:action="@{/app/productos/guardar}"
+                      th:object="${producto}" method="post" method="post">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <fieldset>
+                                <legend>Principales</legend>
+                                <div th:if="${producto.id != null}">
+                                    <input type="hidden" th:field="*{id}"/>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-8">Codigo*</label>
+                                    <div class="col-md-8">
+                                        <input type="text"  class="form-control form-control-line"
+                                               required max="10" th:field="*{codigo}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-8">Nombre*</label>
+                                    <div class="col-md-8">
+                                        <input type="text"  class="form-control form-control-line"
+                                               required max="10" th:field="*{productos}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label  col-md-8">Proveedor</label>
+                                    <div class="col-md-8">
+                                        <select class="form-control input-sm" th:field="*{proveedor.id}">
+                                            <option value="-1">Seleccione un Proveedor</option>
+                                            <option th:each="proveedor : ${proveedores}" th:value="${proveedor.id}" th:text="${proveedor.nombre}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+                            <fieldset>
+                                <legend>Logísticos</legend>
+                                <div class="form-group">
+                                    <label class="col-md-8">Stock minimo por cada periodo*</label>
+                                    <div class="col-md-8">
+                                        <input type="text"  class="form-control form-control-line"
+                                               required max="10" th:field="*{stockMinimoPorPeriodo}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-8">Minima cantidad de atencion por orden de compra*</label>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control form-control-line"
+                                               required max="10" th:field="*{cantidadMinimaPorPedido}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-8">Inventario Inicial*</label>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control form-control-line"
+                                               required max="10" th:field="*{inventarioInicial}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        <button class="btn btn-success" type="submit">Guardar cambios</button>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-lg-6">
+                            <fieldset>
+                                <legend>Costos</legend>
+                                <div class="form-group">
+                                    <label class="col-md-8">Costo de Compra*</label>
+                                    <div class="col-md-8">
+                                        <input type="text"  class="form-control form-control-line"
+                                               required max="10" th:field="*{costoCompra}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-8">Costo de Almacenaje*</label>
+                                    <div class="col-md-8">
+                                        <input type="text"  class="form-control form-control-line"
+                                               required max="10" th:field="*{costoAlmacenaje}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-8">Costo de Preparacion*</label>
+                                    <div class="col-md-8">
+                                        <input type="text"  class="form-control form-control-line"
+                                               required max="10" th:field="*{costoPreparacion}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-8">Costo por unidad no atendida*</label>
+                                    <div class="col-md-8">
+                                        <input type="text"  class="form-control form-control-line"
+                                               required max="10" th:field="*{costoUnidadPerdida}">
+                                    </div>
+                                </div>
+
+                            </fieldset>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

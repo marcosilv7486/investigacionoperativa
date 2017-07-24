@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface OptimizacionService {
 
+    List<Proveedor> obtenerProveedores();
     List<Producto> obtenerProductos();
     void registrarProducto(Producto producto);
     Producto modificar(Producto producto);
