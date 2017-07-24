@@ -13,7 +13,7 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/app/productos")
-public class ProductoController {
+public class ProductoController extends  BaseController{
 
     private OptimizacionService optimizacionService;
 
@@ -32,6 +32,7 @@ public class ProductoController {
     public String create(Model model) {
         model.addAttribute("producto",  new Producto() );
         model.addAttribute("proveedores", optimizacionService.obtenerProveedores());
+        model.addAttribute("categorias", optimizacionService.obtenerCategorias());
         return "/app/productos/mantener";
     }
 
@@ -39,6 +40,7 @@ public class ProductoController {
     public String editar(Model model,@PathVariable(name = "id")Integer id) {
         model.addAttribute("producto",  optimizacionService.obtenerProducto(id));
         model.addAttribute("proveedores", optimizacionService.obtenerProveedores());
+        model.addAttribute("categorias", optimizacionService.obtenerCategorias());
         return "/app/productos/mantener";
     }
 
@@ -46,13 +48,17 @@ public class ProductoController {
     public String guardar(@ModelAttribute @Valid Producto producto , BindingResult result ,
                           RedirectAttributes redirectAttributes , Model model) {
         if(result.hasErrors()) {
+            model.addAttribute("proveedores", optimizacionService.obtenerProveedores());
+            model.addAttribute("categorias", optimizacionService.obtenerCategorias());
             return "/app/productos/mantener";
         }
         if (producto.getId()== null) {
             optimizacionService.registrarProducto(producto);
+            flashMessage(redirectAttributes , "Exito","Producto registrado correctamente","success");
         }
         else {
             optimizacionService.modificar(producto);
+            flashMessage(redirectAttributes , "Exito","Producto modificado correctamente","success");
         }
         return  "redirect:/app/productos/";
     }

@@ -45,6 +45,8 @@ public class Demanda implements Serializable {
     }
 
     public Producto getProductoObj() {
+        if(productoObj==null)
+            productoObj=new Producto();
         return productoObj;
     }
 
@@ -61,6 +63,8 @@ public class Demanda implements Serializable {
     }
 
     public Periodo getPeriodoObj() {
+        if(periodoObj==null)
+            periodoObj=new Periodo();
         return periodoObj;
     }
 

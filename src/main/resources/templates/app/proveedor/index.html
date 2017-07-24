@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="shared/layout">
+<head>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div class="row page-titles">
+        <div class="col-md-6 col-8 align-self-center">
+            <h3 class="text-themecolor m-b-0 m-t-0">Listado de Proveedores</h3>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Proveedores</a></li>
+                <li class="breadcrumb-item active">Listado</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Column -->
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div th:replace="shared/mensajes :: mensajes">
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="btn-group">
+                                <a class="btn btn-primary" th:href="@{/app/proveedor/crear}"><i class="fa fa-plus"></i> Nuevo</a>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Id</th>
+                            <th>Nombre</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="proveedor : ${proveedores}">
+                            <td style="width: 6px">
+                                <div class="btn-group">
+                                    <a th:href="@{/app/proveedor/editar/{id}(id = ${proveedor.id})}" class="btn btn-success">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+
+                                    <a th:href="@{/app/proveedor/eliminar/{id}(id = ${proveedor.id})}" class="btn btn-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                            <td th:text="${proveedor.id}"></td>
+                            <td th:text="${proveedor.nombre}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

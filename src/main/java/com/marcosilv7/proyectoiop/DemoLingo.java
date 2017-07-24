@@ -1,15 +1,22 @@
 package com.marcosilv7.proyectoiop;
 
 import com.lindo.Lingd14;
+
+
 public class DemoLingo {
 
-    Lingd14 lng = new Lingd14();
-    Object pLngEnv;
-    int nLastIterationCount;
+    private Lingd14 lng = new Lingd14();
+    private Object pLngEnv;
+    private int nLastIterationCount;
+    private String urlLingo;
+    private String urlLog;
 
     // Load the Lingo JNI interface
 
-    public DemoLingo(){
+    public DemoLingo(String urlLingo,String urlLog){
+        this.urlLingo=urlLingo;
+        this.urlLog=urlLog;
+        lng = new Lingd14();
         pLngEnv = lng.LScreateEnvLng();
         if ( pLngEnv == null)
         {
@@ -24,7 +31,7 @@ public class DemoLingo {
     public void procesar(){
         double dStatus[] = new double [1];
         int[] nPointersNow = new int[1];
-        int nErr = lng.LSopenLogFileLng( pLngEnv, "C:\\Users\\wonde\\Desktop\\Repositorios\\investigacionoperativa\\log.txt");
+        int nErr = lng.LSopenLogFileLng( pLngEnv, urlLog);
         if ( nErr != lng.LSERR_NO_ERROR_LNG )
         {
             System.out.println( "LSopenLogFileLng() errore: " + nErr);
@@ -55,7 +62,7 @@ public class DemoLingo {
         String sScript = "SET ECHOIN 1" + "\n";
 
         // load the model from disk
-        sScript = sScript + "TAKE C:\\Users\\wonde\\Desktop\\Repositorios\\investigacionoperativa\\modelo.lng" + "\n";
+        sScript = sScript + "TAKE "+ urlLingo + "\n";
 
         // view the formulation
         sScript = sScript + "LOOK ALL" + "\n";
@@ -97,11 +104,6 @@ public class DemoLingo {
         }
     }
 
-    public static void main(String args[]) {
-
-        DemoLingo obj=new DemoLingo();
-        obj.procesar();
-    }
 
     private static int MySolverCallback( Object pnLng, int iLoc, Object jobj)
     {

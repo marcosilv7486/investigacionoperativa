@@ -16,4 +16,31 @@ public interface OptimizacionService {
     List<ResultadoCompra> obtenerResultadoCompra();
     List<ResultadoInventario> obtenerResultadoInventario();
 
+    Periodo obtenerPeriodo(Integer id);
+
+    void registrarPeriodo(Periodo periodo);
+
+    void modificarPeriodo(Periodo periodo);
+
+    List<CategoriaProducto> obtenerCategorias();
+
+    Object obtenerProveedor(Integer id);
+
+    void registrarProveedor(Proveedor proveedor);
+
+    void modificarProveedor(Proveedor proveedor);
+
+    void registrarCategoria(CategoriaProducto categoria);
+
+    void modificarCategoria(CategoriaProducto categoria);
+
+    CategoriaProducto obtenerCategoria(Integer id);
+
+    void registrarDemanda(Demanda demanda);
+
+    void modificarDemanda(Demanda demanda);
+
+    Object obtenerDemanda(Integer id);
+
+    void generarReporte();
 }

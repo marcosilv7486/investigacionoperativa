@@ -20,48 +20,63 @@ public class Producto implements Serializable {
     private Integer id;
 
     @ManyToOne
+    @NotNull(message = "Debe seleccionar un proveedor")
     private Proveedor proveedor;
 
-    @NotNull
+    @NotNull(message = "Debe ingresar el codigo del producto")
     @Column
     private String codigo;
 
-    @NotNull
+    @NotNull(message = "Debe ingresar el nombre del producto")
     @Column
     @Size(max = 100)
     private String productos;
 
-    @NotNull
+    @NotNull(message = "Debe ingresar la concentracion del producto")
+    @Column
+    @Size(max = 100)
+    private String concentracion;
+
+    @NotNull(message = "Debe ingresar la presentacion del producto")
+    @Column
+    @Size(max = 100)
+    private String presentacion;
+
+    @ManyToOne
+    @NotNull(message = "Debe seleccionar una categoria de producto")
+    private CategoriaProducto categoriaProducto;
+
+    @NotNull(message = "Debe ingresar el costo de Compra")
     @Column
     @Min(0)
     private BigDecimal costoCompra;
 
-    @NotNull
+    @NotNull(message = "Debe ingresar el costo de preparacion")
     @Column
     @Min(0)
     private BigDecimal costoPreparacion;
 
-    @NotNull
+    @NotNull(message = "Debe ingresar el costo de Almacenaje")
     @Column
     @Min(0)
     private BigDecimal costoAlmacenaje;
 
-    @NotNull
+    @NotNull(message = "Debe ingresar el costo por unidad perdida")
     @Column
     @Min(0)
     private BigDecimal costoUnidadPerdida;
 
-    @NotNull
+    @NotNull(message = "Debe ingresar la cantidad Minima por pedido")
     @Column
     @Min(0)
     private Integer cantidadMinimaPorPedido;
 
-    @NotNull
+    @NotNull(message = "Debe ingresar el inventario inicial")
     @Column
     @Min(0)
     private Integer inventarioInicial;
 
-    @NotNull
+    @NotNull(message = "Debe ingresar el stock minimo por periodo")
     @Column
     @Min(0)
     private Integer stockMinimoPorPeriodo;
@@ -154,5 +169,31 @@ public class Producto implements Serializable {
 
     public void setProveedor(Proveedor proveedor) {
         this.proveedor = proveedor;
+    }
+
+    public String getConcentracion() {
+        return concentracion;
+    }
+
+    public void setConcentracion(String concentracion) {
+        this.concentracion = concentracion;
+    }
+
+    public String getPresentacion() {
+        return presentacion;
+    }
+
+    public void setPresentacion(String presentacion) {
+        this.presentacion = presentacion;
+    }
+
+    public CategoriaProducto getCategoriaProducto() {
+        if(categoriaProducto==null)
+            categoriaProducto=new CategoriaProducto();
+        return categoriaProducto;
+    }
+
+    public void setCategoriaProducto(CategoriaProducto categoriaProducto) {
+        this.categoriaProducto = categoriaProducto;
     }
 }

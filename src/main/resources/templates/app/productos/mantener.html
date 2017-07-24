@@ -23,6 +23,7 @@
             <div class="card-block">
                 <form class="form"  th:action="@{/app/productos/guardar}"
                       th:object="${producto}" method="post" method="post">
+                    <div th:replace="shared/errores :: errores"></div>
                     <div class="row">
                         <div class="col-lg-6">
                             <fieldset>
@@ -34,14 +35,28 @@
                                     <label class="col-md-8">Codigo*</label>
                                     <div class="col-md-8">
                                         <input type="text"  class="form-control form-control-line"
-                                               required max="10" th:field="*{codigo}">
+                                                max="10" th:field="*{codigo}">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-8">Nombre*</label>
                                     <div class="col-md-8">
                                         <input type="text"  class="form-control form-control-line"
-                                               required max="10" th:field="*{productos}">
+                                                max="10" th:field="*{productos}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-8">Concentracion*</label>
+                                    <div class="col-md-8">
+                                        <input type="text"  class="form-control form-control-line"
+                                               max="10" th:field="*{concentracion}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-8">Presentacion*</label>
+                                    <div class="col-md-8">
+                                        <input type="text"  class="form-control form-control-line"
+                                               max="10" th:field="*{presentacion}">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -54,6 +69,16 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group">
+                                    <label class="control-label  col-md-8">Categoria</label>
+                                    <div class="col-md-8">
+                                        <select class="form-control input-sm" th:field="*{categoriaProducto.id}">
+                                            <option value="-1">Seleccione una Categoria</option>
+                                            <option th:each="categoria : ${categorias}" th:value="${categoria.id}" th:text="${categoria.nombre}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+
                             </fieldset>
                             <fieldset>
                                 <legend>Logísticos</legend>
@@ -61,21 +86,21 @@
                                     <label class="col-md-8">Stock minimo por cada periodo*</label>
                                     <div class="col-md-8">
                                         <input type="text"  class="form-control form-control-line"
-                                               required max="10" th:field="*{stockMinimoPorPeriodo}">
+                                                max="10" th:field="*{stockMinimoPorPeriodo}">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-8">Minima cantidad de atencion por orden de compra*</label>
                                     <div class="col-md-8">
                                         <input type="text" class="form-control form-control-line"
-                                               required max="10" th:field="*{cantidadMinimaPorPedido}">
+                                                max="10" th:field="*{cantidadMinimaPorPedido}">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-8">Inventario Inicial*</label>
                                     <div class="col-md-8">
                                         <input type="text" class="form-control form-control-line"
-                                               required max="10" th:field="*{inventarioInicial}">
+                                                max="10" th:field="*{inventarioInicial}">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -92,28 +117,28 @@
                                     <label class="col-md-8">Costo de Compra*</label>
                                     <div class="col-md-8">
                                         <input type="text"  class="form-control form-control-line"
-                                               required max="10" th:field="*{costoCompra}">
+                                                max="10" th:field="*{costoCompra}">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-8">Costo de Almacenaje*</label>
                                     <div class="col-md-8">
                                         <input type="text"  class="form-control form-control-line"
-                                               required max="10" th:field="*{costoAlmacenaje}">
+                                                max="10" th:field="*{costoAlmacenaje}">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-8">Costo de Preparacion*</label>
                                     <div class="col-md-8">
                                         <input type="text"  class="form-control form-control-line"
-                                               required max="10" th:field="*{costoPreparacion}">
+                                                max="10" th:field="*{costoPreparacion}">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-8">Costo por unidad no atendida*</label>
                                     <div class="col-md-8">
                                         <input type="text"  class="form-control form-control-line"
-                                               required max="10" th:field="*{costoUnidadPerdida}">
+                                                max="10" th:field="*{costoUnidadPerdida}">
                                     </div>
                                 </div>
 

@@ -1,12 +1,16 @@
 package com.marcosilv7.proyectoiop.service.impl;
 
+import com.marcosilv7.proyectoiop.configuracion.OperacionNoPermitidaException;
 import com.marcosilv7.proyectoiop.dao.domain.*;
 import com.marcosilv7.proyectoiop.dao.repository.*;
 import com.marcosilv7.proyectoiop.service.interfaces.OptimizacionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OptimizacionServiceImpl implements OptimizacionService {
@@ -17,19 +21,24 @@ public class OptimizacionServiceImpl implements OptimizacionService {
     private ResultadoCompraRepository resultadoCompraRepository;
     private ResultadoInventarioRepository resultadoInventarioRepository;
     private ProveedorRepository proveedorRepository;
+    private CategoriaRepository categoriaRepository;
+
+
 
     @Autowired
     public OptimizacionServiceImpl(ProductoRepository productoRepository, PeriodoRepository periodoRepository,
                                    DemandaRepository demandaRepository,
                                    ResultadoCompraRepository resultadoCompraRepository,
                                    ResultadoInventarioRepository resultadoInventarioRepository,
-                                   ProveedorRepository proveedorRepository) {
+                                   ProveedorRepository proveedorRepository,
+                                   CategoriaRepository categoriaRepository) {
         this.productoRepository = productoRepository;
         this.periodoRepository = periodoRepository;
         this.demandaRepository = demandaRepository;
         this.resultadoCompraRepository = resultadoCompraRepository;
         this.resultadoInventarioRepository = resultadoInventarioRepository;
         this.proveedorRepository=proveedorRepository;
+        this.categoriaRepository=categoriaRepository;
     }
 
     @Override
@@ -43,11 +52,13 @@ public class OptimizacionServiceImpl implements OptimizacionService {
     }
 
     @Override
+    @Transactional
     public void registrarProducto(Producto producto) {
         productoRepository.save(producto);
     }
 
     @Override
+    @Transactional
     public Producto modificar(Producto producto) {
         return productoRepository.save(producto);
     }
@@ -75,5 +86,121 @@ public class OptimizacionServiceImpl implements OptimizacionService {
     @Override
     public List<ResultadoInventario> obtenerResultadoInventario() {
         return null;
+    }
+
+    @Override
+    public Periodo obtenerPeriodo(Integer id) {
+        return periodoRepository.findOne(id);
+    }
+
+    @Override
+    @Transactional
+    public void registrarPeriodo(Periodo periodo) {
+        periodoRepository.save(periodo);
+    }
+
+    @Override
+    @Transactional
+    public void modificarPeriodo(Periodo periodo) {
+        periodoRepository.save(periodo);
+    }
+
+    @Override
+    public List<CategoriaProducto> obtenerCategorias() {
+        return categoriaRepository.findAll();
+    }
+
+    @Override
+    public Object obtenerProveedor(Integer id) {
+        return proveedorRepository.findOne(id);
+    }
+
+    @Override
+    @Transactional
+    public void registrarProveedor(Proveedor proveedor) {
+        proveedorRepository.save(proveedor);
+    }
+
+    @Override
+    public void modificarProveedor(Proveedor proveedor) {
+        proveedorRepository.save(proveedor);
+    }
+
+    @Override
+    @Transactional
+    public void registrarCategoria(CategoriaProducto categoria) {
+        categoriaRepository.save(categoria);
+    }
+
+    @Override
+    @Transactional
+    public void modificarCategoria(CategoriaProducto categoria) {
+        categoriaRepository.save(categoria);
+    }
+
+    @Override
+    public CategoriaProducto obtenerCategoria(Integer id) {
+        return categoriaRepository.findOne(id);
+    }
+
+    @Override
+    @Transactional
+    public void registrarDemanda(Demanda demanda) {
+        List<Demanda> demandasRegistradas=demandaRepository.findByProductoId(demanda.getProductoObj().getId());
+        List<Periodo> periodos=periodoRepository.findAll();
+        //Validacion Demanda Repetida
+        if(demandasRegistradas.stream().filter(p->p.getProductoObj().getId().equals(demanda.getProductoObj().getId()) &&
+            p.getPeriodoObj().getId().equals(demanda.getPeriodoObj().getId())).collect(Collectors.toList()).size()>0){
+            throw new OperacionNoPermitidaException("Ya se encontro la demanda registrada del producto con el periodo");
+        }
+        //Validacion Maximo numero de demandas
+        if(demandasRegistradas.size()+1>periodos.size()){
+            throw new OperacionNoPermitidaException("No se permite agregar mas demandas de este producto porque ya esta completo");
+        }
+        Producto producto=productoRepository.findOne(demanda.getProductoObj().getId());
+        producto.setProductos(producto.getProductos());
+        Periodo periodo=periodoRepository.findOne(demanda.getPeriodoObj().getId());
+        periodo.setMes(periodo.getMes());
+        demandaRepository.save(demanda);
+    }
+
+    @Override
+    @Transactional
+    public void modificarDemanda(Demanda demanda) {
+        //VALIDACIONES
+        Demanda entity=demandaRepository.findOne(demanda.getId());
+        if(entity.getProductoObj().getId().equals(demanda.getPeriodoObj().getId())){
+            if(!demanda.getPeriodoObj().getId().equals(entity.getPeriodoObj().getId())){
+                List<Demanda> demandasRegistradas=demandaRepository.findByProductoId(demanda.getProductoObj().getId());
+                if(demandasRegistradas.stream().filter(p-> p.getPeriodoObj().getId()
+                        .equals(demanda.getPeriodoObj().getId())).collect(Collectors.toList()).size()>0){
+                    throw new OperacionNoPermitidaException("Ya se encontro la demanda registrada del producto con el periodo");
+                }
+            }
+        }else {
+            List<Demanda> demandasRegistradas=demandaRepository.findByProductoId(demanda.getProductoObj().getId());
+            if(demandasRegistradas.stream().filter(p->p.getProductoObj().getId().equals(demanda.getProductoObj().getId()) &&
+                    p.getPeriodoObj().getId().equals(demanda.getPeriodoObj().getId())).collect(Collectors.toList()).size()>0){
+                throw new OperacionNoPermitidaException("Ya se encontro la demanda registrada del producto con el periodo");
+            }
+        }
+        Producto producto=productoRepository.findOne(demanda.getProductoObj().getId());
+        entity.setProductoObj(producto);
+        entity.setProducto(producto.getProductos());
+        Periodo periodo=periodoRepository.findOne(demanda.getPeriodoObj().getId());
+        entity.setPeriodos(periodo.getMes());
+        entity.setPeriodoObj(periodo);
+        entity.setDemanda(demanda.getDemanda());
+        demandaRepository.save(entity);
+    }
+
+    @Override
+    public Object obtenerDemanda(Integer id) {
+        return demandaRepository.findOne(id);
+    }
+
+    @Override
+    public void generarReporte() {
+
     }
 }
