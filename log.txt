@@ -1,0 +1,172 @@
+  LINGO/WIN64 14.0.1.65 (15 Apr 15)
+ 
+  LINDO API 8.0.1933.595 (Apr 15 2015 18:17:48)
+ 
+  Copyright (C) 2011-2013 LINDO Systems Inc. Licensed material,
+  all rights reserved. Copying except as authorized in license
+  agreement is prohibited.
+ 
+  License location: D:\LINGO64_14\lndlng14.lic
+  Config  location: D:\LINGO64_14\LINGO.CNF
+ 
+  Eval Use Only
+ 
+  License expires: 12 Jan 2018
+ 
+  Licensed for commercial use.
+  Branch-and-bound solver enabled.
+  Nonlinear solver enabled.
+  Barrier solver enabled.
+  Global solver enabled.
+  Integer solver enabled.
+  Stochastic solver enabled.
+  Conic solver enabled.
+ 
+ 
+   Parameter        Old Value     New Value
+    ECHOIN             0             1
+ 
+: TAKE C:\Users\wonde\Desktop\Repositorios\investigacionoperativa\modelo.lng
+: MODEL:
+? sets:
+? PRODUCTOS :C_COMPRA,C_ALMACENAJE,C_PREPARACION,C_COSTO_UNIDADPERDIDA,INV_INI,CANT_M
+? PERIODOS ;
+? PRO_PER(PRODUCTOS,PERIODOS):X,INV,DEMANDA,COMPRAR;
+? endsets
+? data:
+? PRODUCTOS = @ODBC(PROYECTO_IOP,PRODUCTOS,PRODUCTOS);
+? PERIODOS= @ODBC(PROYECTO_IOP,PERIODOS,PERIODOS);
+? C_COMPRA = @ODBC(PROYECTO_IOP,PRODUCTOS,c_costo);
+? C_ALMACENAJE = @ODBC(PROYECTO_IOP,PRODUCTOS,c_costoAlmacenaje);
+? C_PREPARACION = @ODBC(PROYECTO_IOP,PRODUCTOS,c_costoPreparacion);
+? C_COSTO_UNIDADPERDIDA= @ODBC(PROYECTO_IOP,PRODUCTOS,c_costoUnidadPerdida);
+? INV_INI=@ODBC(PROYECTO_IOP,PRODUCTOS,inventarioInicial);
+? CANT_MIN_PEDIDO=@ODBC(PROYECTO_IOP,PRODUCTOS,cantidadMinimaPorPedido);
+? DEMANDA=@ODBC(PROYECTO_IOP,demanda,demanda);
+? @ODBC(PROYECTO_IOP,compra,compra)=X;
+? @ODBC(PROYECTO_IOP,inventario,inventario)=inv;
+? enddata
+? !DEFINICACION DE ENTERO;
+? @FOR(PRO_PER(I,J):@GIN(X(I,J)));
+? @FOR(PRO_PER(I,J):@GIN(INV(I,J)));
+? !VARIABLE BINARIA DE COMPRAR O NO SEGUN LA CANTIDAD DEL PROVEEDOR;
+? @FOR(PRO_PER(I,J):@BIN(COMPRAR(I,J)));
+? !FUNCION OBJETIVO;
+? MIN  =
+? !COSTO DE COMPRA;
+? @SUM(PRO_PER(I,J):X(I,J)*C_COMPRA(I))
+? !COSTO DE ALMACENAJE;
+?  + @SUM(PRO_PER(I,J):INV(I,J)*C_ALMACENAJE(I)) ;
+? !COSTO DE PREPARACION (DEMANDA);
+? !COSTO DE UNIDAD PERDIDA;
+? !RESTRICCION DE DEMANDA;
+? @FOR(PRODUCTOS(I):
+? @FOR(PERIODOS(J)|J#EQ#1:
+? INV_INI(I)+X(I,J)*COMPRAR(I,J)-DEMANDA(I,J)=INV(I,J)));
+? @FOR(PRODUCTOS(I):
+? @FOR(PERIODOS(J)|J#GE#2:
+? INV(I,J-1)+X(I,J)*COMPRAR(I,J)-DEMANDA(I,J)=INV(I,J)));
+? !RESTRICCION DE STOCK MINIMO QUE DEBERIA QUEDAR  POR CADA PERIODO POR PRODUCTO;
+? @FOR(PRODUCTOS(I):
+? @FOR(PERIODOS(J):INV(I,J)>=150));
+? !RESTRICCION DE STOCK MAXIMO ;
+? @FOR(PRODUCTOS(I):
+? @SUM(PERIODOS(J):INV(I,J))<=28056);
+? !RESTRICCION POR CANTIDAD MINIMA DE ATENCCION POR PRODUCTO DEL PROVEEDOR;
+? @FOR(PRODUCTOS(I):
+? @FOR(PERIODOS(J):X(I,J)>=CANT_MIN_PEDIDO(I)*COMPRAR(I,J)));
+? !RESTRICCION DE CUBICAJE;
+? END
+: LOOK ALL
+ 
+ 1]sets:
+ 
+ [Error Code:  113]
+ 
+  LOOK/SAVE failed ... the following line is too long:       2
+  Increase the terminal width.
+ 
+ 
+: GO
+  Compiling model ...
+  Structural analysis, pass 1 ...
+  Scalarizing model ...
+  Generating nonzero matrix ...
+  Solving ...
+  Running dual solver...
+ 
+  Global optimal solution found.
+  Objective value:                              8063.500
+  Objective bound:                              8063.500
+  Infeasibilities:                              0.000000
+  Extended solver steps:                               0
+  Total solver iterations:                             2
+  Elapsed runtime seconds:                          0.11
+ 
+  Running output operations ...
+ 
+  Export Summary Report
+  ---------------------
+  Transfer Method:       ODBC BASED
+  ODBC Data Source:      PROYECTO_IOP
+  Data Table Name:       compra
+  Columns Specified:              1
+      compra
+  LINGO Column Length:            2
+  Database Column Length:         2
+ 
+  Export Summary Report
+  ---------------------
+  Transfer Method:       ODBC BASED
+  ODBC Data Source:      PROYECTO_IOP
+  Data Table Name:       inventario
+  Columns Specified:              1
+      inventario
+  LINGO Column Length:            2
+  Database Column Length:         2
+ 
+  Model Class:                                      MILP
+ 
+  Total variables:                      8
+  Nonlinear variables:                  0
+  Integer variables:                    6
+ 
+  Total constraints:                   16
+  Nonlinear constraints:                0
+ 
+  Total nonzeros:                      37
+  Nonlinear nonzeros:                   0
+ 
+  Linearization components added:
+      Constraints:                      8
+      Variables:                        2
+ 
+ 
+ 
+                                Variable           Value        Reduced Cost
+                   C_COMPRA( PRODUCTO_1)        1.150000            0.000000
+               C_ALMACENAJE( PRODUCTO_1)        2.140000            0.000000
+              C_PREPARACION( PRODUCTO_1)        0.000000            0.000000
+      C_COSTO_UNIDADPERDIDA( PRODUCTO_1)        0.000000            0.000000
+                    INV_INI( PRODUCTO_1)        4000.000            0.000000
+            CANT_MIN_PEDIDO( PRODUCTO_1)        1000.000            0.000000
+                   X( PRODUCTO_1, ENERO)        0.000000            1.150000
+                 X( PRODUCTO_1, FEBRERO)        1150.000            1.150000
+                 INV( PRODUCTO_1, ENERO)        3000.000            2.140000
+               INV( PRODUCTO_1, FEBRERO)        150.0000            2.140000
+             DEMANDA( PRODUCTO_1, ENERO)        1000.000            0.000000
+           DEMANDA( PRODUCTO_1, FEBRERO)        4000.000            0.000000
+             COMPRAR( PRODUCTO_1, ENERO)        0.000000            0.000000
+           COMPRAR( PRODUCTO_1, FEBRERO)        1.000000            0.000000
+ 
+                                     Row    Slack or Surplus      Dual Price
+                                       1        8063.500           -1.000000
+                                       2        0.000000            0.000000
+                                       3        0.000000            0.000000
+                                       4        2850.000            0.000000
+                                       5        0.000000            0.000000
+                                       6        24906.00            0.000000
+                                       7        0.000000            0.000000
+                                       8        150.0000            0.000000
+ 
+: QUIT
