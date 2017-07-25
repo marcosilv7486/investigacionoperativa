@@ -30,26 +30,26 @@ public class PeriodoController extends BaseController {
     @GetMapping("/")
     public String index(Model model){
         model.addAttribute("periodos", optimizacionService.obtenerPeriodos());
-        return "/app/periodos/index";
+        return "app/periodos/index";
     }
 
     @GetMapping("/crear")
     public String create(Model model) {
         model.addAttribute("periodo",  new Periodo() );
-        return "/app/periodos/mantener";
+        return "app/periodos/mantener";
     }
 
     @GetMapping("/editar/{id}")
     public String editar(Model model,@PathVariable(name = "id")Integer id) {
         model.addAttribute("periodo",  optimizacionService.obtenerPeriodo(id));
-        return "/app/periodos/mantener";
+        return "app/periodos/mantener";
     }
 
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute @Valid Periodo periodo , BindingResult result ,
                           RedirectAttributes redirectAttributes , Model model) {
         if(result.hasErrors()) {
-            return "/app/periodos/mantener";
+            return "app/periodos/mantener";
         }
         if (periodo.getId()== null) {
             optimizacionService.registrarPeriodo(periodo);

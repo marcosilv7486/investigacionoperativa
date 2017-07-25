@@ -29,26 +29,26 @@ public class CategoriaController extends BaseController {
     @GetMapping("/")
     public String index(Model model){
         model.addAttribute("categorias",optimizacionService.obtenerCategorias());
-        return "/app/categoria/index";
+        return "app/categoria/index";
     }
 
     @GetMapping("/crear")
     public String create(Model model) {
         model.addAttribute("categoria",  new CategoriaProducto() );
-        return "/app/categoria/mantener";
+        return "app/categoria/mantener";
     }
 
     @GetMapping("/editar/{id}")
     public String editar(Model model,@PathVariable(name = "id")Integer id) {
         model.addAttribute("categoria",  optimizacionService.obtenerCategoria(id));
-        return "/app/categoria/mantener";
+        return "app/categoria/mantener";
     }
 
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute @Valid CategoriaProducto categoria , BindingResult result ,
                           RedirectAttributes redirectAttributes , Model model) {
         if(result.hasErrors()) {
-            return "/app/categoria/mantener";
+            return "app/categoria/mantener";
         }
         if (categoria.getId()== null) {
             optimizacionService.registrarCategoria(categoria);

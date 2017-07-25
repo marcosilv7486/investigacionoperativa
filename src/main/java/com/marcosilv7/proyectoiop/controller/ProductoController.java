@@ -25,7 +25,7 @@ public class ProductoController extends  BaseController{
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("productos", optimizacionService.obtenerProductos());
-        return "/app/productos/index";
+        return "app/productos/index";
     }
 
     @GetMapping("/crear")
@@ -33,7 +33,7 @@ public class ProductoController extends  BaseController{
         model.addAttribute("producto",  new Producto() );
         model.addAttribute("proveedores", optimizacionService.obtenerProveedores());
         model.addAttribute("categorias", optimizacionService.obtenerCategorias());
-        return "/app/productos/mantener";
+        return "app/productos/mantener";
     }
 
     @GetMapping("/editar/{id}")
@@ -41,7 +41,7 @@ public class ProductoController extends  BaseController{
         model.addAttribute("producto",  optimizacionService.obtenerProducto(id));
         model.addAttribute("proveedores", optimizacionService.obtenerProveedores());
         model.addAttribute("categorias", optimizacionService.obtenerCategorias());
-        return "/app/productos/mantener";
+        return "app/productos/mantener";
     }
 
     @PostMapping("/guardar")
@@ -50,7 +50,7 @@ public class ProductoController extends  BaseController{
         if(result.hasErrors()) {
             model.addAttribute("proveedores", optimizacionService.obtenerProveedores());
             model.addAttribute("categorias", optimizacionService.obtenerCategorias());
-            return "/app/productos/mantener";
+            return "app/productos/mantener";
         }
         if (producto.getId()== null) {
             optimizacionService.registrarProducto(producto);

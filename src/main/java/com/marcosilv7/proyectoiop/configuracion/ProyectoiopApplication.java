@@ -24,7 +24,7 @@ import org.thymeleaf.templateresolver.TemplateResolver;
 		"com.marcosilv7.proyectoiop.dao.repository"
 })
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class })
-public class ProyectoiopApplication extends SpringBootServletInitializer {
+public class ProyectoiopApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ProyectoiopApplication.class, args);
@@ -36,12 +36,6 @@ public class ProyectoiopApplication extends SpringBootServletInitializer {
 	@Value("${url-logLingo}")
 	private String urlRutaLogReporte;
 
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(applicationClass);
-	}
-
-	private static Class<ProyectoiopApplication> applicationClass = ProyectoiopApplication.class;
 
 	@Bean
 	public TemplateResolver templateResolver() {

@@ -28,26 +28,26 @@ public class ProveedorController extends BaseController {
     @GetMapping("/")
     public String index(Model model){
         model.addAttribute("proveedores",optimizacionService.obtenerProveedores());
-        return "/app/proveedor/index";
+        return "app/proveedor/index";
     }
 
     @GetMapping("/crear")
     public String create(Model model) {
         model.addAttribute("proveedor",  new Proveedor() );
-        return "/app/proveedor/mantener";
+        return "app/proveedor/mantener";
     }
 
     @GetMapping("/editar/{id}")
     public String editar(Model model,@PathVariable(name = "id")Integer id) {
         model.addAttribute("proveedor",  optimizacionService.obtenerProveedor(id));
-        return "/app/proveedor/mantener";
+        return "app/proveedor/mantener";
     }
 
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute @Valid Proveedor proveedor , BindingResult result ,
                           RedirectAttributes redirectAttributes , Model model) {
         if(result.hasErrors()) {
-            return "/app/proveedor/mantener";
+            return "app/proveedor/mantener";
         }
         if (proveedor.getId()== null) {
             optimizacionService.registrarProveedor(proveedor);

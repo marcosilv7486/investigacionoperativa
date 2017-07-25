@@ -30,7 +30,7 @@ public class DemandaController extends BaseController {
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("demandas", optimizacionService.obtenerDemanda());
-        return "/app/demanda/index";
+        return "app/demanda/index";
     }
 
     @GetMapping("/crear")
@@ -38,7 +38,7 @@ public class DemandaController extends BaseController {
         model.addAttribute("periodos", optimizacionService.obtenerPeriodos());
         model.addAttribute("productos", optimizacionService.obtenerProductos());
         model.addAttribute("demanda",new Demanda());
-        return "/app/demanda/mantener";
+        return "app/demanda/mantener";
     }
 
     @GetMapping("/editar/{id}")
@@ -46,7 +46,7 @@ public class DemandaController extends BaseController {
         model.addAttribute("demanda",  optimizacionService.obtenerDemanda(id));
         model.addAttribute("periodos", optimizacionService.obtenerPeriodos());
         model.addAttribute("productos", optimizacionService.obtenerProductos());
-        return "/app/demanda/mantener";
+        return "app/demanda/mantener";
     }
 
     @PostMapping("/guardar")
@@ -55,7 +55,7 @@ public class DemandaController extends BaseController {
         if(result.hasErrors()) {
             model.addAttribute("periodos", optimizacionService.obtenerPeriodos());
             model.addAttribute("productos", optimizacionService.obtenerProductos());
-            return "/app/demanda/mantener";
+            return "app/demanda/mantener";
         }
         if (demanda.getId()== null) {
             try {
@@ -66,7 +66,7 @@ public class DemandaController extends BaseController {
                 model.addAttribute("periodos", optimizacionService.obtenerPeriodos());
                 model.addAttribute("productos", optimizacionService.obtenerProductos());
                 result.addError(new ObjectError("Demanda",e.getMessage()));
-                return "/app/demanda/mantener";
+                return "app/demanda/mantener";
             }
         }
         else {
@@ -78,7 +78,7 @@ public class DemandaController extends BaseController {
                 model.addAttribute("periodos", optimizacionService.obtenerPeriodos());
                 model.addAttribute("productos", optimizacionService.obtenerProductos());
                 result.addError(new ObjectError("Demanda",e.getMessage()));
-                return "/app/demanda/mantener";
+                return "app/demanda/mantener";
             }
         }
 
