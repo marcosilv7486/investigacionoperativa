@@ -102,7 +102,7 @@ values (
 'LATA',
 2.135466667,
 1.15,
-0,
+0.01,
 0,
 53693,
 27816,
@@ -126,16 +126,16 @@ categoriaProducto_id,
 proveedor_id)
 values (
 '0000004',
-'U.S MILK GOLD 1 ',
+'U.S MILK GOLD 1',
 ' ',
 'LATAX400GR',
 8.1536,
 15.14,
-0,
+0.01,
 0,
 9114,
+988,
 0,
-2000,
 2,
 5
 );
@@ -155,16 +155,16 @@ categoriaProducto_id,
 proveedor_id)
 values (
 '0000005',
-'SUPRAXOM 1 ',
+'SUPRAXOM 1',
 ' ',
 'LATAX400GR',
 8.1536,
 15.14,
-0,
+0.01,
 0,
 5066,
+445,
 0,
-2000,
 2,
 5
 );
@@ -190,77 +190,49 @@ values (
 'APOLLA',
 0.8246,
 5.96,
-0,
-0,
-6341,
-0,
-1000,
-1,
-3
-);
-
-insert into Productos(
-codigo,
-productos,
-concentracion,
-presentacion,
-costoAlmacenaje,
-costoCompra,
-costoPreparacion,
-costoUnidadPerdida,
-inventarioInicial,
-stockMinimoPorPeriodo,
-cantidadMinimaPorPedido,
-categoriaProducto_id,
-proveedor_id)
-values (
-'0000007',
-'ORAMIN CAPS',
-'',
-'CAPS',
-0.8246,
-5.96,
-0,
+0.01,
 0,
 6341,
+1962,
 0,
-1000,
 1,
 3
 );
 --Demanda
 insert into Demanda(producto_id,producto,periodo_id,periodos,demanda)
-values (1,'ORAMIN DRINK',1,'I cuatrimestre',12000);
+values (1,'ORAMIN DRINK',1,'I cuatrimestre',7000);
 insert into Demanda(producto_id,producto,periodo_id,periodos,demanda)
-values (1,'ORAMIN DRINK',2,'II cuatrimestre',12000);
+values (1,'ORAMIN DRINK',2,'II cuatrimestre',6000);
 insert into Demanda(producto_id,producto,periodo_id,periodos,demanda)
-values (1,'ORAMIN DRINK',3,'III cuatrimestre',10000);
+values (1,'ORAMIN DRINK',3,'III cuatrimestre',7000);
 
 
 
 insert into Demanda(producto_id,producto,periodo_id,periodos,demanda)
-values (2,'ORAMIN DRINK',1,'I cuatrimestre',12000);
+values (2,'U.S MILK GOLD 1',1,'I cuatrimestre',5200);
 insert into Demanda(producto_id,producto,periodo_id,periodos,demanda)
-values (2,'ORAMIN DRINK',2,'II cuatrimestre',12000);
+values (2,'U.S MILK GOLD 1',2,'II cuatrimestre',4580);
 insert into Demanda(producto_id,producto,periodo_id,periodos,demanda)
-values (2,'ORAMIN DRINK',3,'III cuatrimestre',10000);
+values (2,'U.S MILK GOLD 1',3,'III cuatrimestre',8700);
 
 
 insert into Demanda(producto_id,producto,periodo_id,periodos,demanda)
-values (3,'ORAMIN DRINK',1,'I cuatrimestre',12000);
+values (3,'SUPRAXOM 1',1,'I cuatrimestre',1500);
 insert into Demanda(producto_id,producto,periodo_id,periodos,demanda)
-values (3,'ORAMIN DRINK',2,'II cuatrimestre',12000);
+values (3,'SUPRAXOM 1',2,'II cuatrimestre',3000);
 insert into Demanda(producto_id,producto,periodo_id,periodos,demanda)
-values (3,'ORAMIN DRINK',3,'III cuatrimestre',10000);
+values (3,'SUPRAXOM 1',3,'III cuatrimestre',3400);
 
 
 
 insert into Demanda(producto_id,producto,periodo_id,periodos,demanda)
-values (4,'ORAMIN DRINK',1,'I cuatrimestre',12000);
+values (4,'B-VAT',1,'I cuatrimestre',9300);
 insert into Demanda(producto_id,producto,periodo_id,periodos,demanda)
-values (4,'ORAMIN DRINK',2,'II cuatrimestre',12000);
+values (4,'B-VAT',2,'II cuatrimestre',12000);
 insert into Demanda(producto_id,producto,periodo_id,periodos,demanda)
-values (4,'ORAMIN DRINK',3,'III cuatrimestre',10000);
+values (4,'B-VAT',3,'III cuatrimestre',13000);
+
+select *from PRODUCTOS;
 
 
 

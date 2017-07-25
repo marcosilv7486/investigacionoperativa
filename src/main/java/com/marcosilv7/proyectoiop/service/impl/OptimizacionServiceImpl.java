@@ -122,7 +122,15 @@ public class OptimizacionServiceImpl implements OptimizacionService {
     @Override
     public List<Reporte> obtenerResultadoInventario() {
         List<Reporte> reportes=new ArrayList<>();
-        List<ResultadoInventario> reporteCompra=resultadoInventarioRepository.findAll();
+        List<ResultadoInventario> reporteCompra=new ArrayList<>();
+        List<Object[]> data=resultadoInventarioRepository.obtenerTodos();
+        for(Object[] fila : data){
+            ResultadoInventario rc=new ResultadoInventario();
+            rc.setPeriodo(fila[1].toString());
+            rc.setProducto(fila[0].toString());
+            rc.setInventario(Integer.parseInt(fila[2].toString()));
+            reporteCompra.add(rc);
+        }
         List<Producto> productos=productoRepository.findAll();
         List<Periodo> periodos=periodoRepository.findAll();
         for(Producto producto : productos){

@@ -17,6 +17,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import org.thymeleaf.templateresolver.TemplateResolver;
 
+@Configuration
 @ComponentScan("com.marcosilv7.proyectoiop.*")
 @EntityScan("com.marcosilv7.proyectoiop.*")
 @EnableJpaRepositories(value = {
@@ -55,5 +56,6 @@ public class ProyectoiopApplication extends SpringBootServletInitializer {
 	@Scope("prototype")
 	public DemoLingo lingo(){
 		return new DemoLingo(urlRutaReporte,urlRutaLogReporte);
+
 	}
 }

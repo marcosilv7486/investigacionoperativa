@@ -25,7 +25,7 @@ public class ReportesController extends BaseController {
         optimizacionService.limpiarReporte();
         optimizacionService.generarReporte();
         model.addAttribute("reporteCompra",optimizacionService.obtenerResultadoCompra());
-        model.addAttribute("reporteCompra",optimizacionService.obtenerResultadoInventario());
+        model.addAttribute("reporteInventario",optimizacionService.obtenerResultadoInventario());
         model.addAttribute("periodos",optimizacionService.obtenerPeriodos());
         return "/app/reportes/index";
     }
