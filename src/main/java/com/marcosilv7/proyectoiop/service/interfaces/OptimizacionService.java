@@ -45,5 +45,5 @@ public interface OptimizacionService {
 
     void limpiarReporte();
 
-    void generarReporte();
+    double generarReporte();
 }

@@ -23,10 +23,12 @@ public class ReportesController extends BaseController {
     @RequestMapping("/generar")
     public String generarReporte(Model model){
         optimizacionService.limpiarReporte();
-        optimizacionService.generarReporte();
+        double resultado=optimizacionService.generarReporte();
+        System.out.println(resultado);
         model.addAttribute("reporteCompra",optimizacionService.obtenerResultadoCompra());
         model.addAttribute("reporteInventario",optimizacionService.obtenerResultadoInventario());
         model.addAttribute("periodos",optimizacionService.obtenerPeriodos());
+        model.addAttribute("fo",resultado);
         return "app/reportes/index";
     }
 }

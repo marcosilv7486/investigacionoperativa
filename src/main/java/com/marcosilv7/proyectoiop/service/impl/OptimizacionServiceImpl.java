@@ -292,7 +292,7 @@ public class OptimizacionServiceImpl implements OptimizacionService {
     }
 
     @Override
-    public void generarReporte() {
-        lingo.procesar();
+    public double generarReporte() {
+        return lingo.procesar();
     }
 }

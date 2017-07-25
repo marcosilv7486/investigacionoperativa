@@ -32,36 +32,43 @@ public class DemoLingo {
         System.loadLibrary( "Lingj64_14");
     }
 
-    public void procesar(){
+    public double procesar(){
         double dStatus[] = new double [1];
+        double dfo[] = new double [1];
         int[] nPointersNow = new int[1];
         int nErr = lng.LSopenLogFileLng( pLngEnv, urlLog);
         if ( nErr != lng.LSERR_NO_ERROR_LNG )
         {
             System.out.println(urlLog);
             System.out.println( "LSopenLogFileLng() errore: " + nErr);
-            return;
+            return 0;
         }
 
         nErr = lng.LSsetPointerLng( pLngEnv, dStatus, nPointersNow);
         if ( nErr != lng.LSERR_NO_ERROR_LNG )
         {
             System.out.println( "***LSsetPointerLng() error***: " + nErr);
-            return;
+            return 0;
+        }
+        nErr = lng.LSsetPointerLng( pLngEnv, dfo, nPointersNow);
+        if ( nErr != lng.LSERR_NO_ERROR_LNG )
+        {
+            System.out.println( "***LSsetPointerLng() error***: " + nErr);
+            return 0;
         }
         // pass Lingo the name of the solver callback function...
         nErr = lng.LSsetCallbackSolverLng( pLngEnv, "MySolverCallback", this);
         if ( nErr != lng.LSERR_NO_ERROR_LNG )
         {
             System.out.println("LSsetCallbackSolverLng() error");
-            return;
+            return 0;
         }
         // ...and the error callback function
         nErr = lng.LSsetCallbackErrorLng( pLngEnv, "MyErrorCallback", this);
         if ( nErr != lng.LSERR_NO_ERROR_LNG )
         {
             System.out.println("LSsetCallbackErrorLng() error");
-            return;
+            return 0;
         }
         // echo input to log file
         String sScript = "SET ECHOIN 1" + "\n";
@@ -83,7 +90,7 @@ public class DemoLingo {
         if ( nErr != lng.LSERR_NO_ERROR_LNG )
         {
             System.out.println( "***LSexecuteScriptLng error***: " + nErr);
-            return;
+            return 0;
         }
         // clear the pointers to force update of local arrays
         // ***NOTE*** solution won't get passed to local arrays until
@@ -92,7 +99,7 @@ public class DemoLingo {
         if ( nErr != lng.LSERR_NO_ERROR_LNG )
         {
             System.out.println( "***LSclearPointerLng() error***: " + nErr);
-            return;
+            return 0;
         }
 
 
@@ -105,8 +112,9 @@ public class DemoLingo {
         if ( nErr != lng.LSERR_NO_ERROR_LNG )
         {
             System.out.println( "***LScloseLogFileLng() error***: " + nErr);
-            return;
+            return 0;
         }
+        return dfo[0];
     }
 
 
