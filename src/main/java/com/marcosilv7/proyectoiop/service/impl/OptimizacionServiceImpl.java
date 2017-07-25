@@ -1,5 +1,6 @@
 package com.marcosilv7.proyectoiop.service.impl;
 
+import com.marcosilv7.proyectoiop.DemoLingo;
 import com.marcosilv7.proyectoiop.configuracion.OperacionNoPermitidaException;
 import com.marcosilv7.proyectoiop.dao.domain.*;
 import com.marcosilv7.proyectoiop.dao.repository.*;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +24,7 @@ public class OptimizacionServiceImpl implements OptimizacionService {
     private ResultadoInventarioRepository resultadoInventarioRepository;
     private ProveedorRepository proveedorRepository;
     private CategoriaRepository categoriaRepository;
-
+    private DemoLingo lingo;
 
 
     @Autowired
@@ -31,7 +33,8 @@ public class OptimizacionServiceImpl implements OptimizacionService {
                                    ResultadoCompraRepository resultadoCompraRepository,
                                    ResultadoInventarioRepository resultadoInventarioRepository,
                                    ProveedorRepository proveedorRepository,
-                                   CategoriaRepository categoriaRepository) {
+                                   CategoriaRepository categoriaRepository,
+                                   DemoLingo demoLingo) {
         this.productoRepository = productoRepository;
         this.periodoRepository = periodoRepository;
         this.demandaRepository = demandaRepository;
@@ -39,6 +42,7 @@ public class OptimizacionServiceImpl implements OptimizacionService {
         this.resultadoInventarioRepository = resultadoInventarioRepository;
         this.proveedorRepository=proveedorRepository;
         this.categoriaRepository=categoriaRepository;
+        this.lingo=demoLingo;
     }
 
     @Override
@@ -200,7 +204,31 @@ public class OptimizacionServiceImpl implements OptimizacionService {
     }
 
     @Override
+    @Transactional
     public void generarReporte() {
+        resultadoInventarioRepository.deleteAll();
+        resultadoCompraRepository.deleteAll();
+        List<ResultadoCompra> compras=new ArrayList<>();
+        List<ResultadoInventario> inventarios=new ArrayList<>();
+        //Crear el detalle por cada demanda
+        for(Producto producto : productoRepository.findAll()){
+            for(Periodo periodo : periodoRepository.findAll()){
+                ResultadoCompra compra=new ResultadoCompra();
+                compra.setCompra(0);
+                compra.setPeriodo(periodo.getMes());
+                compra.setProducto(producto.getProductos());
+                compras.add(compra);
 
+                ResultadoInventario inventario=new ResultadoInventario();
+                inventario.setInventario(0);
+                inventario.setPeriodo(periodo.getMes());
+                inventario.setProducto(producto.getProductos());
+                inventarios.add(inventario);
+            }
+        }
+        resultadoInventarioRepository.save(inventarios);
+        resultadoCompraRepository.save(compras);
+        lingo.procesar();
+        System.out.println("Procesando....");
     }
 }

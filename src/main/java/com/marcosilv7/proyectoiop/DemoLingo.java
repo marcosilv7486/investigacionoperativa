@@ -1,6 +1,8 @@
 package com.marcosilv7.proyectoiop;
 
 import com.lindo.Lingd14;
+import com.marcosilv7.proyectoiop.configuracion.ProyectoiopApplication;
+import org.springframework.boot.SpringApplication;
 
 
 public class DemoLingo {
@@ -16,15 +18,17 @@ public class DemoLingo {
     public DemoLingo(String urlLingo,String urlLog){
         this.urlLingo=urlLingo;
         this.urlLog=urlLog;
-        lng = new Lingd14();
+
         pLngEnv = lng.LScreateEnvLng();
         if ( pLngEnv == null)
         {
+
             System.out.println("Unable to create Lingo environment");
             return;
         }
     }
     static {
+        //System.out.println(System.getProperty("java.library.path"));
         System.loadLibrary( "Lingj64_14");
     }
 
@@ -34,6 +38,7 @@ public class DemoLingo {
         int nErr = lng.LSopenLogFileLng( pLngEnv, urlLog);
         if ( nErr != lng.LSERR_NO_ERROR_LNG )
         {
+            System.out.println(urlLog);
             System.out.println( "LSopenLogFileLng() errore: " + nErr);
             return;
         }
@@ -103,6 +108,7 @@ public class DemoLingo {
             return;
         }
     }
+
 
 
     private static int MySolverCallback( Object pnLng, int iLoc, Object jobj)

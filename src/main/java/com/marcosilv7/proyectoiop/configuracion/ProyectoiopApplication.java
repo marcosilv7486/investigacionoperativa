@@ -11,6 +11,7 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
@@ -51,6 +52,7 @@ public class ProyectoiopApplication extends SpringBootServletInitializer {
 	}
 
 	@Bean
+	@Scope("prototype")
 	public DemoLingo lingo(){
 		return new DemoLingo(urlRutaReporte,urlRutaLogReporte);
 	}
