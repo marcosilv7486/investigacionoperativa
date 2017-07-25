@@ -36,7 +36,7 @@
                             </div>
                         </div>
                     </div>
-                    <table class="table">
+                    <table class="table" id="tabla">
                         <thead>
                         <tr>
                             <th>#</th>
@@ -51,10 +51,6 @@
                                     <a th:href="@{/app/periodos/editar/{id}(id = ${periodo.id})}" class="btn btn-success">
                                         <i class="fa fa-pencil"></i>
                                     </a>
-
-                                    <a th:href="@{/app/periodos/eliminar/{id}(id = ${periodo.id})}" class="btn btn-danger">
-                                        <i class="fa fa-trash"></i>
-                                    </a>
                                 </div>
                             </td>
                             <td th:text="${periodo.id}"></td>
@@ -66,6 +62,13 @@
             </div>
         </div>
     </div>
+</th:block>
+<th:block layout:fragment="custom-js">
+    <script>
+        $(document).ready(function() {
+            $('#tabla').DataTable();
+        } );
+    </script>
 </th:block>
 </body>
 </html>

@@ -22,54 +22,63 @@
         <!-- Column -->
         <div class="col-sm-12">
             <div class="card">
-                <div class="row">
+                <div class="row top-buffer" >
                     <div class="col-md-12">
                         <div th:replace="shared/mensajes :: mensajes">
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row top-buffer">
                     <div class="col-md-12">
                         <div class="btn-group">
                             <a class="btn btn-primary" th:href="@{/app/productos/crear}"><i class="fa fa-plus"></i> Nuevo</a>
                         </div>
                     </div>
                 </div>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Codigo</th>
-                            <th>Nombre</th>
-                            <th>Proveedor</th>
-                            <th>Categoria</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="producto : ${productos}">
-                                <td style="width: 6px">
-                                    <div class="btn-group">
-                                        <a th:href="@{/app/productos/editar/{id}(id = ${producto.id})}" class="btn btn-success">
-                                            <i class="fa fa-pencil"></i>
-                                        </a>
-
-                                        <a th:href="@{/app/productos/eliminar/{id}(id = ${producto.id})}" class="btn btn-danger">
-                                            <i class="fa fa-trash"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                                <td th:text="${producto.codigo}"></td>
-                                <td th:text="${producto.productos}"></td>
-                                <td th:text="${producto.proveedor.nombre}"></td>
-                                <td th:text="${producto.categoriaProducto.nombre}"></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="row top-buffer">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table" id="tabla">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Codigo</th>
+                                    <th>Nombre</th>
+                                    <th>Proveedor</th>
+                                    <th>Categoria</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="producto : ${productos}">
+                                    <td style="width: 6px">
+                                        <div class="btn-group">
+                                            <a th:href="@{/app/productos/editar/{id}(id = ${producto.id})}" class="btn btn-success">
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td th:text="${producto.codigo}"></td>
+                                    <td th:text="${producto.productos}"></td>
+                                    <td th:text="${producto.proveedor.nombre}"></td>
+                                    <td th:text="${producto.categoriaProducto.nombre}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+</th:block>
+
+<th:block layout:fragment="custom-js">
+    <script>
+        $(document).ready(function() {
+            $('#tabla').DataTable();
+        } );
+    </script>
 </th:block>
 </body>
 </html>

@@ -4,6 +4,7 @@ import com.marcosilv7.proyectoiop.DemoLingo;
 import com.marcosilv7.proyectoiop.configuracion.OperacionNoPermitidaException;
 import com.marcosilv7.proyectoiop.dao.domain.*;
 import com.marcosilv7.proyectoiop.dao.repository.*;
+import com.marcosilv7.proyectoiop.dto.Reporte;
 import com.marcosilv7.proyectoiop.service.interfaces.OptimizacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -83,13 +84,65 @@ public class OptimizacionServiceImpl implements OptimizacionService {
     }
 
     @Override
-    public List<ResultadoCompra> obtenerResultadoCompra() {
-        return null;
+    @Transactional
+    public List<Reporte> obtenerResultadoCompra() {
+        List<Reporte> reportes=new ArrayList<>();
+        resultadoCompraRepository.flush();
+        List<Object[]> data=resultadoCompraRepository.obtenerTodos();
+        List<ResultadoCompra> reporteCompra=new ArrayList<>();
+        for(Object[] fila : data){
+            ResultadoCompra rc=new ResultadoCompra();
+            rc.setPeriodo(fila[1].toString());
+            rc.setProducto(fila[0].toString());
+            rc.setCompra(Integer.parseInt(fila[2].toString()));
+            reporteCompra.add(rc);
+        }
+        List<Producto> productos=productoRepository.findAll();
+        List<Periodo> periodos=periodoRepository.findAll();
+        for(Producto producto : productos){
+            Reporte reporte=new Reporte();
+            reporte.setCodigoProducto(producto.getCodigo());
+            reporte.setNombreProducto(producto.getProductos());
+            reporte.setConcentracion(producto.getConcentracion());
+            reporte.setCategoria(producto.getCategoriaProducto().getNombre());
+            reporte.setProveedor(producto.getProveedor().getNombre());
+            List<Integer> valores=new ArrayList<>();
+            for(Periodo periodo : periodos){
+                ResultadoCompra ri=reporteCompra.stream().filter(p->p.getProducto().equals(producto.getProductos())
+                        && p.getPeriodo().equals(periodo.getMes())).findFirst().orElse(null);
+                if(ri==null)continue;
+                valores.add(ri.getCompra());
+            }
+            reporte.setValores(valores);
+            reportes.add(reporte);
+        }
+        return reportes;
     }
 
     @Override
-    public List<ResultadoInventario> obtenerResultadoInventario() {
-        return null;
+    public List<Reporte> obtenerResultadoInventario() {
+        List<Reporte> reportes=new ArrayList<>();
+        List<ResultadoInventario> reporteCompra=resultadoInventarioRepository.findAll();
+        List<Producto> productos=productoRepository.findAll();
+        List<Periodo> periodos=periodoRepository.findAll();
+        for(Producto producto : productos){
+            Reporte reporte=new Reporte();
+            reporte.setCodigoProducto(producto.getCodigo());
+            reporte.setNombreProducto(producto.getProductos());
+            reporte.setConcentracion(producto.getConcentracion());
+            reporte.setCategoria(producto.getCategoriaProducto().getNombre());
+            reporte.setProveedor(producto.getProveedor().getNombre());
+            List<Integer> valores=new ArrayList<>();
+            for(Periodo periodo : periodos){
+                ResultadoInventario ri=reporteCompra.stream().filter(p->p.getProducto().equals(producto.getProductos())
+                && p.getPeriodo().equals(periodo.getMes())).findFirst().orElse(null);
+                if(ri==null)continue;
+                valores.add(ri.getInventario());
+            }
+            reporte.setValores(valores);
+            reportes.add(reporte);
+        }
+        return reportes;
     }
 
     @Override
@@ -205,7 +258,7 @@ public class OptimizacionServiceImpl implements OptimizacionService {
 
     @Override
     @Transactional
-    public void generarReporte() {
+    public void limpiarReporte() {
         resultadoInventarioRepository.deleteAll();
         resultadoCompraRepository.deleteAll();
         List<ResultadoCompra> compras=new ArrayList<>();
@@ -228,7 +281,10 @@ public class OptimizacionServiceImpl implements OptimizacionService {
         }
         resultadoInventarioRepository.save(inventarios);
         resultadoCompraRepository.save(compras);
+    }
+
+    @Override
+    public void generarReporte() {
         lingo.procesar();
-        System.out.println("Procesando....");
     }
 }

@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 /**
  * Created by marcosilveriocastro on 23/07/17.
  */
-@Table(name="PRODUCTOS")
+@Table(name="Productos")
 @Entity
 public class Producto implements Serializable {
 

@@ -3,6 +3,7 @@ package com.marcosilv7.proyectoiop.controller;
 import com.marcosilv7.proyectoiop.service.interfaces.OptimizacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -20,8 +21,12 @@ public class ReportesController extends BaseController {
     }
 
     @RequestMapping("/generar")
-    public String generarReporte(){
+    public String generarReporte(Model model){
+        optimizacionService.limpiarReporte();
         optimizacionService.generarReporte();
-        return "/app/reporte/resultado";
+        model.addAttribute("reporteCompra",optimizacionService.obtenerResultadoCompra());
+        model.addAttribute("reporteCompra",optimizacionService.obtenerResultadoInventario());
+        model.addAttribute("periodos",optimizacionService.obtenerPeriodos());
+        return "/app/reportes/index";
     }
 }

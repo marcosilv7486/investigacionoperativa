@@ -1,6 +1,7 @@
 package com.marcosilv7.proyectoiop.service.interfaces;
 
 import com.marcosilv7.proyectoiop.dao.domain.*;
+import com.marcosilv7.proyectoiop.dto.Reporte;
 
 import java.util.List;
 
@@ -13,8 +14,8 @@ public interface OptimizacionService {
     Producto obtenerProducto(int id);
     List<Periodo> obtenerPeriodos();
     List<Demanda> obtenerDemanda();
-    List<ResultadoCompra> obtenerResultadoCompra();
-    List<ResultadoInventario> obtenerResultadoInventario();
+    List<Reporte> obtenerResultadoCompra();
+    List<Reporte> obtenerResultadoInventario();
 
     Periodo obtenerPeriodo(Integer id);
 
@@ -41,6 +42,8 @@ public interface OptimizacionService {
     void modificarDemanda(Demanda demanda);
 
     Object obtenerDemanda(Integer id);
+
+    void limpiarReporte();
 
     void generarReporte();
 }

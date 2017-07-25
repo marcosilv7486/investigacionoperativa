@@ -22,60 +22,49 @@
   Stochastic solver enabled.
   Conic solver enabled.
  
+: SET ECHOIN 1
  
    Parameter        Old Value     New Value
-    ECHOIN             0             1
+    ECHOIN             1             1
  
-: TAKE C:\Users\wonde\Desktop\Repositorios\investigacionoperativa\modelo.lng
+: TAKE C:\Users\wonde\Desktop\Repositorios\investigacionoperativa\src\main\resources\
 : MODEL:
 ? sets:
 ? PRODUCTOS :C_COMPRA,C_ALMACENAJE,C_PREPARACION,C_COSTO_UNIDADPERDIDA,INV_INI,CANT_M
 ? PERIODOS ;
-? PRO_PER(PRODUCTOS,PERIODOS):X,INV,DEMANDA,COMPRAR;
+? PRO_PER(PRODUCTOS,PERIODOS):X,INV,DEMANDA;
 ? endsets
 ? data:
 ? PRODUCTOS = @ODBC(PROYECTO_IOP,PRODUCTOS,PRODUCTOS);
-? PERIODOS= @ODBC(PROYECTO_IOP,PERIODOS,PERIODOS);
-? C_COMPRA = @ODBC(PROYECTO_IOP,PRODUCTOS,c_costo);
-? C_ALMACENAJE = @ODBC(PROYECTO_IOP,PRODUCTOS,c_costoAlmacenaje);
-? C_PREPARACION = @ODBC(PROYECTO_IOP,PRODUCTOS,c_costoPreparacion);
-? C_COSTO_UNIDADPERDIDA= @ODBC(PROYECTO_IOP,PRODUCTOS,c_costoUnidadPerdida);
+? PERIODOS= @ODBC(PROYECTO_IOP,PERIODOS,MES);
+? C_COMPRA = @ODBC(PROYECTO_IOP,PRODUCTOS,costoCompra);
+? C_ALMACENAJE = @ODBC(PROYECTO_IOP,PRODUCTOS,costoAlmacenaje);
 ? INV_INI=@ODBC(PROYECTO_IOP,PRODUCTOS,inventarioInicial);
-? CANT_MIN_PEDIDO=@ODBC(PROYECTO_IOP,PRODUCTOS,cantidadMinimaPorPedido);
+? STOCK_MIN=@ODBC(PROYECTO_IOP,PRODUCTOS,stockMinimoPorPeriodo);
 ? DEMANDA=@ODBC(PROYECTO_IOP,demanda,demanda);
-? @ODBC(PROYECTO_IOP,compra,compra)=X;
-? @ODBC(PROYECTO_IOP,inventario,inventario)=inv;
+? @ODBC(PROYECTO_IOP,ResultadoCompra,compra)=X;
+? @ODBC(PROYECTO_IOP,ResultadoInventario,inventario)=inv;
+? @POINTER( 1) = @STATUS();
 ? enddata
 ? !DEFINICACION DE ENTERO;
 ? @FOR(PRO_PER(I,J):@GIN(X(I,J)));
 ? @FOR(PRO_PER(I,J):@GIN(INV(I,J)));
-? !VARIABLE BINARIA DE COMPRAR O NO SEGUN LA CANTIDAD DEL PROVEEDOR;
-? @FOR(PRO_PER(I,J):@BIN(COMPRAR(I,J)));
 ? !FUNCION OBJETIVO;
 ? MIN  =
 ? !COSTO DE COMPRA;
 ? @SUM(PRO_PER(I,J):X(I,J)*C_COMPRA(I))
 ? !COSTO DE ALMACENAJE;
 ?  + @SUM(PRO_PER(I,J):INV(I,J)*C_ALMACENAJE(I)) ;
-? !COSTO DE PREPARACION (DEMANDA);
-? !COSTO DE UNIDAD PERDIDA;
 ? !RESTRICCION DE DEMANDA;
 ? @FOR(PRODUCTOS(I):
 ? @FOR(PERIODOS(J)|J#EQ#1:
-? INV_INI(I)+X(I,J)*COMPRAR(I,J)-DEMANDA(I,J)=INV(I,J)));
+? INV_INI(I)+X(I,J)-DEMANDA(I,J)=INV(I,J)));
 ? @FOR(PRODUCTOS(I):
 ? @FOR(PERIODOS(J)|J#GE#2:
-? INV(I,J-1)+X(I,J)*COMPRAR(I,J)-DEMANDA(I,J)=INV(I,J)));
+? INV(I,J-1)+X(I,J)-DEMANDA(I,J)=INV(I,J)));
 ? !RESTRICCION DE STOCK MINIMO QUE DEBERIA QUEDAR  POR CADA PERIODO POR PRODUCTO;
 ? @FOR(PRODUCTOS(I):
-? @FOR(PERIODOS(J):INV(I,J)>=150));
-? !RESTRICCION DE STOCK MAXIMO ;
-? @FOR(PRODUCTOS(I):
-? @SUM(PERIODOS(J):INV(I,J))<=28056);
-? !RESTRICCION POR CANTIDAD MINIMA DE ATENCCION POR PRODUCTO DEL PROVEEDOR;
-? @FOR(PRODUCTOS(I):
-? @FOR(PERIODOS(J):X(I,J)>=CANT_MIN_PEDIDO(I)*COMPRAR(I,J)));
-? !RESTRICCION DE CUBICAJE;
+? @FOR(PERIODOS(J):INV(I,J)>=STOCK_MIN(I)));
 ? END
 : LOOK ALL
  
@@ -96,12 +85,12 @@
   Running dual solver...
  
   Global optimal solution found.
-  Objective value:                              8063.500
-  Objective bound:                              8063.500
+  Objective value:                              1366164.
+  Objective bound:                              1366164.
   Infeasibilities:                              0.000000
   Extended solver steps:                               0
-  Total solver iterations:                             2
-  Elapsed runtime seconds:                          0.11
+  Total solver iterations:                             0
+  Elapsed runtime seconds:                          0.17
  
   Running output operations ...
  
@@ -109,64 +98,149 @@
   ---------------------
   Transfer Method:       ODBC BASED
   ODBC Data Source:      PROYECTO_IOP
-  Data Table Name:       compra
+  Data Table Name:       ResultadoCompra
   Columns Specified:              1
       compra
-  LINGO Column Length:            2
-  Database Column Length:         2
+  LINGO Column Length:           15
+  Database Column Length:        15
  
   Export Summary Report
   ---------------------
   Transfer Method:       ODBC BASED
   ODBC Data Source:      PROYECTO_IOP
-  Data Table Name:       inventario
+  Data Table Name:       ResultadoInventario
   Columns Specified:              1
       inventario
-  LINGO Column Length:            2
-  Database Column Length:         2
+  LINGO Column Length:           15
+  Database Column Length:        15
  
   Model Class:                                      MILP
  
-  Total variables:                      8
+  Total variables:                     45
   Nonlinear variables:                  0
-  Integer variables:                    6
+  Integer variables:                   30
  
-  Total constraints:                   16
+  Total constraints:                   31
   Nonlinear constraints:                0
  
-  Total nonzeros:                      37
+  Total nonzeros:                      85
   Nonlinear nonzeros:                   0
- 
-  Linearization components added:
-      Constraints:                      8
-      Variables:                        2
  
  
  
                                 Variable           Value        Reduced Cost
-                   C_COMPRA( PRODUCTO_1)        1.150000            0.000000
-               C_ALMACENAJE( PRODUCTO_1)        2.140000            0.000000
-              C_PREPARACION( PRODUCTO_1)        0.000000            0.000000
-      C_COSTO_UNIDADPERDIDA( PRODUCTO_1)        0.000000            0.000000
-                    INV_INI( PRODUCTO_1)        4000.000            0.000000
-            CANT_MIN_PEDIDO( PRODUCTO_1)        1000.000            0.000000
-                   X( PRODUCTO_1, ENERO)        0.000000            1.150000
-                 X( PRODUCTO_1, FEBRERO)        1150.000            1.150000
-                 INV( PRODUCTO_1, ENERO)        3000.000            2.140000
-               INV( PRODUCTO_1, FEBRERO)        150.0000            2.140000
-             DEMANDA( PRODUCTO_1, ENERO)        1000.000            0.000000
-           DEMANDA( PRODUCTO_1, FEBRERO)        4000.000            0.000000
-             COMPRAR( PRODUCTO_1, ENERO)        0.000000            0.000000
-           COMPRAR( PRODUCTO_1, FEBRERO)        1.000000            0.000000
+                 C_COMPRA( ORAMIN_DRINK)        1.150000            0.000000
+              C_COMPRA( U_S_MILK_GOLD_1)        15.14000            0.000000
+                   C_COMPRA( SUPRAXOM_1)        15.14000            0.000000
+                        C_COMPRA( B_VAT)        5.960000            0.000000
+                  C_COMPRA( ORAMIN_CAPS)        5.960000            0.000000
+             C_ALMACENAJE( ORAMIN_DRINK)        2.140000            0.000000
+          C_ALMACENAJE( U_S_MILK_GOLD_1)        8.150000            0.000000
+               C_ALMACENAJE( SUPRAXOM_1)        8.150000            0.000000
+                    C_ALMACENAJE( B_VAT)       0.8200000            0.000000
+              C_ALMACENAJE( ORAMIN_CAPS)       0.8200000            0.000000
+            C_PREPARACION( ORAMIN_DRINK)        0.000000            0.000000
+         C_PREPARACION( U_S_MILK_GOLD_1)        0.000000            0.000000
+              C_PREPARACION( SUPRAXOM_1)        0.000000            0.000000
+                   C_PREPARACION( B_VAT)        0.000000            0.000000
+             C_PREPARACION( ORAMIN_CAPS)        0.000000            0.000000
+    C_COSTO_UNIDADPERDIDA( ORAMIN_DRINK)        0.000000            0.000000
+ C_COSTO_UNIDADPERDIDA( U_S_MILK_GOLD_1)        0.000000            0.000000
+      C_COSTO_UNIDADPERDIDA( SUPRAXOM_1)        0.000000            0.000000
+           C_COSTO_UNIDADPERDIDA( B_VAT)        0.000000            0.000000
+     C_COSTO_UNIDADPERDIDA( ORAMIN_CAPS)        0.000000            0.000000
+                  INV_INI( ORAMIN_DRINK)        53693.00            0.000000
+               INV_INI( U_S_MILK_GOLD_1)        9114.000            0.000000
+                    INV_INI( SUPRAXOM_1)        5066.000            0.000000
+                         INV_INI( B_VAT)        6341.000            0.000000
+                   INV_INI( ORAMIN_CAPS)        6341.000            0.000000
+          CANT_MIN_PEDIDO( ORAMIN_DRINK)        0.000000            0.000000
+       CANT_MIN_PEDIDO( U_S_MILK_GOLD_1)        0.000000            0.000000
+            CANT_MIN_PEDIDO( SUPRAXOM_1)        0.000000            0.000000
+                 CANT_MIN_PEDIDO( B_VAT)        0.000000            0.000000
+           CANT_MIN_PEDIDO( ORAMIN_CAPS)        0.000000            0.000000
+                STOCK_MIN( ORAMIN_DRINK)        27816.00            0.000000
+             STOCK_MIN( U_S_MILK_GOLD_1)        0.000000            0.000000
+                  STOCK_MIN( SUPRAXOM_1)        0.000000            0.000000
+                       STOCK_MIN( B_VAT)        0.000000            0.000000
+                 STOCK_MIN( ORAMIN_CAPS)        0.000000            0.000000
+        X( ORAMIN_DRINK, I_CUATRIMESTRE)        0.000000            1.150000
+       X( ORAMIN_DRINK, II_CUATRIMESTRE)        0.000000            1.150000
+      X( ORAMIN_DRINK, III_CUATRIMESTRE)        8123.000            1.150000
+     X( U_S_MILK_GOLD_1, I_CUATRIMESTRE)        2886.000            15.14000
+    X( U_S_MILK_GOLD_1, II_CUATRIMESTRE)        12000.00            15.14000
+   X( U_S_MILK_GOLD_1, III_CUATRIMESTRE)        10000.00            15.14000
+          X( SUPRAXOM_1, I_CUATRIMESTRE)        6934.000            15.14000
+         X( SUPRAXOM_1, II_CUATRIMESTRE)        12000.00            15.14000
+        X( SUPRAXOM_1, III_CUATRIMESTRE)        10000.00            15.14000
+               X( B_VAT, I_CUATRIMESTRE)        5659.000            5.960000
+              X( B_VAT, II_CUATRIMESTRE)        12000.00            5.960000
+             X( B_VAT, III_CUATRIMESTRE)        10000.00            5.960000
+         X( ORAMIN_CAPS, I_CUATRIMESTRE)        5659.000            5.960000
+        X( ORAMIN_CAPS, II_CUATRIMESTRE)        12000.00            5.960000
+       X( ORAMIN_CAPS, III_CUATRIMESTRE)        10000.00            5.960000
+      INV( ORAMIN_DRINK, I_CUATRIMESTRE)        41693.00            2.140000
+     INV( ORAMIN_DRINK, II_CUATRIMESTRE)        29693.00            2.140000
+    INV( ORAMIN_DRINK, III_CUATRIMESTRE)        27816.00            2.140000
+   INV( U_S_MILK_GOLD_1, I_CUATRIMESTRE)        0.000000            8.150000
+  INV( U_S_MILK_GOLD_1, II_CUATRIMESTRE)        0.000000            8.150000
+ INV( U_S_MILK_GOLD_1, III_CUATRIMESTRE)        0.000000            8.150000
+        INV( SUPRAXOM_1, I_CUATRIMESTRE)        0.000000            8.150000
+       INV( SUPRAXOM_1, II_CUATRIMESTRE)        0.000000            8.150000
+      INV( SUPRAXOM_1, III_CUATRIMESTRE)        0.000000            8.150000
+             INV( B_VAT, I_CUATRIMESTRE)        0.000000           0.8200000
+            INV( B_VAT, II_CUATRIMESTRE)        0.000000           0.8200000
+           INV( B_VAT, III_CUATRIMESTRE)        0.000000           0.8200000
+       INV( ORAMIN_CAPS, I_CUATRIMESTRE)        0.000000           0.8200000
+      INV( ORAMIN_CAPS, II_CUATRIMESTRE)        0.000000           0.8200000
+     INV( ORAMIN_CAPS, III_CUATRIMESTRE)        0.000000           0.8200000
+  DEMANDA( ORAMIN_DRINK, I_CUATRIMESTRE)        12000.00            0.000000
+ DEMANDA( ORAMIN_DRINK, II_CUATRIMESTRE)        12000.00            0.000000
+ DEMANDA( ORAMIN_DRINK, III_CUATRIMESTRE        10000.00            0.000000
+ DEMANDA( U_S_MILK_GOLD_1, I_CUATRIMESTR        12000.00            0.000000
+ DEMANDA( U_S_MILK_GOLD_1, II_CUATRIMEST        12000.00            0.000000
+ DEMANDA( U_S_MILK_GOLD_1, III_CUATRIMES        10000.00            0.000000
+    DEMANDA( SUPRAXOM_1, I_CUATRIMESTRE)        12000.00            0.000000
+   DEMANDA( SUPRAXOM_1, II_CUATRIMESTRE)        12000.00            0.000000
+  DEMANDA( SUPRAXOM_1, III_CUATRIMESTRE)        10000.00            0.000000
+         DEMANDA( B_VAT, I_CUATRIMESTRE)        12000.00            0.000000
+        DEMANDA( B_VAT, II_CUATRIMESTRE)        12000.00            0.000000
+       DEMANDA( B_VAT, III_CUATRIMESTRE)        10000.00            0.000000
+   DEMANDA( ORAMIN_CAPS, I_CUATRIMESTRE)        12000.00            0.000000
+  DEMANDA( ORAMIN_CAPS, II_CUATRIMESTRE)        12000.00            0.000000
+ DEMANDA( ORAMIN_CAPS, III_CUATRIMESTRE)        10000.00            0.000000
  
                                      Row    Slack or Surplus      Dual Price
-                                       1        8063.500           -1.000000
+                                       1        1366164.           -1.000000
                                        2        0.000000            0.000000
                                        3        0.000000            0.000000
-                                       4        2850.000            0.000000
+                                       4        0.000000            0.000000
                                        5        0.000000            0.000000
-                                       6        24906.00            0.000000
+                                       6        0.000000            0.000000
                                        7        0.000000            0.000000
-                                       8        150.0000            0.000000
+                                       8        0.000000            0.000000
+                                       9        0.000000            0.000000
+                                      10        0.000000            0.000000
+                                      11        0.000000            0.000000
+                                      12        0.000000            0.000000
+                                      13        0.000000            0.000000
+                                      14        0.000000            0.000000
+                                      15        0.000000            0.000000
+                                      16        0.000000            0.000000
+                                      17        13877.00            0.000000
+                                      18        1877.000            0.000000
+                                      19        0.000000            0.000000
+                                      20        0.000000            0.000000
+                                      21        0.000000            0.000000
+                                      22        0.000000            0.000000
+                                      23        0.000000            0.000000
+                                      24        0.000000            0.000000
+                                      25        0.000000            0.000000
+                                      26        0.000000            0.000000
+                                      27        0.000000            0.000000
+                                      28        0.000000            0.000000
+                                      29        0.000000            0.000000
+                                      30        0.000000            0.000000
+                                      31        0.000000            0.000000
  
 : QUIT
